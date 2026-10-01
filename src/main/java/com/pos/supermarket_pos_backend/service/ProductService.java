@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
     private final ProductRepository productRepository;
     public List<Product> getAll() {
         return productRepository.findAll();
@@ -24,7 +24,7 @@ public class ProductService {
         if(productRepository.existsByBarcode(product.getBarcode())){
             throw new RuntimeException("Barcode already exist: "+product.getBarcode());
         }
-        product.setCategory(categoryRepository.findById(product.getCategory().getId()).orElseThrow(()->new RuntimeException("Category not found")));
+        product.setCategory(categoryService.getById(product.getCategory().getId()));
         return productRepository.save(product);
     }
 
